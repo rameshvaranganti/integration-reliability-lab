@@ -1,0 +1,35 @@
+name: Reliability lab test
+on: [push, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  corrected:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - uses: rameshvaranganti/integration-reliability-lab@v0.1.0
+        with:
+          strategy: corrected
+          report: corrected-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: corrected-report
+          path: corrected-report.json
+  broken:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - uses: rameshvaranganti/integration-reliability-lab@v0.1.0
+        with:
+          strategy: broken
+          report: broken-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: broken-report
+          path: broken-report.json
