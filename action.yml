@@ -1,0 +1,35 @@
+name: Integration Reliability Lab
+description: Verify that a payment retry after a timeout creates one transaction
+branding:
+  icon: check-circle
+  color: blue
+inputs:
+  strategy:
+    description: Demo sender strategy (corrected or broken)
+    default: corrected
+  sender:
+    description: Optional path to a trusted sender module in the checked-out repository
+  report:
+    description: Output path for the JSON report
+    default: reliability-report.json
+outputs:
+  passed:
+    description: Whether all scenario checks passed
+    value: ${{ steps.scenario.outputs.passed }}
+runs:
+  using: composite
+  steps:
+    - name: Run payment recovery scenario
+      id: scenario
+      shell: bash
+      env:
+        LAB_PATH: ${{ github.action_path }}
+        LAB_STRATEGY: ${{ inputs.strategy }}
+        LAB_SENDER: ${{ inputs.sender }}
+        LAB_REPORT: ${{ inputs.report }}
+      run: |
+        args=(--strategy="$LAB_STRATEGY" --report="$LAB_REPORT")
+        if [[ -n "$LAB_SENDER" ]]; then
+          args+=(--sender="$LAB_SENDER")
+        fi
+        node "$LAB_PATH/src/cli.mjs" "${args[@]}"

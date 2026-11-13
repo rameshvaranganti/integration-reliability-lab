@@ -1,0 +1,9 @@
+{
+  "name": "integration-reliability-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {"node": ">=24"},
+  "scripts": {"test": "node --test", "demo": "node src/cli.mjs"}
+}
